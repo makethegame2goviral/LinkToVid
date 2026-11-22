@@ -46,7 +46,7 @@
       <input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="url">
       <button class="primary" id="analyzeBtn">Analyze link →</button>
     </div>
-    <p class="hint">Use links to videos you own or are authorized to download. Platform restrictions and copyright rules still apply.</p>
+    <p class="hint">Direct video files only · Maximum duration: 40 minutes · Up to 500 MB · Only download videos you are allowed to save.</p>
     <div id="result" aria-live="polite"></div>
   </section>
   <div class="platforms"><span class="pill"><span class="dot"></span>YouTube preview</span><span class="pill"><span class="dot"></span>TikTok</span><span class="pill"><span class="dot"></span>Instagram</span><span class="pill"><span class="dot"></span>Facebook</span><span class="pill"><span class="dot"></span>Direct MP4</span></div>
@@ -98,9 +98,33 @@
     if (error) console.warn('History could not be saved:', error.message);
   }
 
+  function readVideoDuration(blob) {
+    return new Promise((resolve, reject) => {
+      const objectUrl = URL.createObjectURL(blob);
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      const cleanup = () => {
+        video.removeAttribute('src');
+        video.load();
+        URL.revokeObjectURL(objectUrl);
+      };
+      video.onloadedmetadata = () => {
+        const duration = video.duration;
+        cleanup();
+        if (!Number.isFinite(duration) || duration <= 0) reject(new Error('Could not verify this video’s duration. Please use a standard MP4 or WebM file.'));
+        else resolve(duration);
+      };
+      video.onerror = () => {
+        cleanup();
+        reject(new Error('Could not read this video’s duration. Please use a standard MP4 or WebM file.'));
+      };
+      video.src = objectUrl;
+    });
+  }
+
   async function downloadDirectVideo(info, button, message) {
     button.disabled = true;
-    button.textContent = 'Preparing download…';
+    button.textContent = 'Checking video…';
     message.textContent = '';
     try {
       // Direct files only: no platform extraction, proxy, or restriction bypass.
@@ -115,6 +139,11 @@
       const blob = await response.blob();
       if (!blob.size) throw new Error('The video file is empty.');
       if (blob.size > 500 * 1024 * 1024) throw new Error('This file is larger than the 500 MB browser-download limit.');
+      button.textContent = 'Checking duration…';
+      const duration = await readVideoDuration(blob);
+      if (duration > 40 * 60) throw new Error('This video is longer than the 40-minute limit and cannot be downloaded with LinkToVid.');
+      const minutes = Math.floor(duration / 60);
+      const seconds = Math.floor(duration % 60);
       const path = new URL(info.open).pathname.split('/').filter(Boolean).pop() || 'video';
       const filename = decodeURIComponent(path).replace(/[^a-z0-9._-]/gi, '_').slice(0, 100) || 'video';
       const objectUrl = URL.createObjectURL(blob);
@@ -126,7 +155,7 @@
       link.remove();
       setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
       button.textContent = 'Download again ↓';
-      message.textContent = 'Download started. If it did not appear, check your browser downloads.';
+      message.textContent = 'Duration verified: ' + minutes + ':' + String(seconds).padStart(2, '0') + '. Download started.';
     } catch (error) {
       message.textContent = error.name === 'TypeError'
         ? 'Download blocked by the video server or browser (often CORS). Try opening the original file and use its own download option.'
