@@ -1,237 +1,287 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="LinkToVid – Video-Links erkennen, Vorschauen ansehen und direkte Videodateien speichern.">
-  <title>LinkToVid – Your links. Your videos.</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{--blue:#2563eb;--blue2:#1d4ed8;--ink:#172033;--muted:#687386;--line:#e8edf5;--bg:#f7f9fc;--card:#fff;--shadow:0 18px 55px rgba(26,46,85,.08)}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,sans-serif}
-    button,input{font:inherit}a{color:inherit}.top{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 1120px)/2))}
-    .brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-size:21px;font-weight:800;letter-spacing:-.8px}.logo{width:37px;height:37px;border-radius:12px;background:linear-gradient(145deg,#4386ff,#1d4ed8);display:grid;place-items:center;color:#fff;box-shadow:0 7px 16px #2563eb35}.logo svg{width:21px}
-    .nav{display:flex;align-items:center;gap:18px}.nav a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:600}.nav a:hover{color:var(--blue)}
-    .auth{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer}.auth:hover{border-color:#b8ccff;color:var(--blue)}
-    main{max-width:940px;margin:0 auto;padding:65px 22px 70px}.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #dce8ff;background:#eff5ff;color:var(--blue);padding:8px 12px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
-    h1{font-size:clamp(38px,6vw,62px);letter-spacing:-3.2px;line-height:1.04;margin:22px 0 15px;text-align:center}.gradient{color:var(--blue)}.lead{max-width:570px;margin:0 auto;color:var(--muted);line-height:1.7;text-align:center;font-size:15px}
-    .panel{max-width:760px;margin:34px auto 0;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}
-    .field-label{display:block;font-size:12px;font-weight:800;margin:0 0 10px 2px}.input-wrap{display:flex;align-items:center;gap:10px;border:1px solid #dfe6f0;border-radius:14px;padding:6px 7px 6px 14px;background:#fff;transition:.2s}.input-wrap:focus-within{border-color:#8eb2ff;box-shadow:0 0 0 4px #2563eb12}.input-wrap svg{width:19px;color:#8a96a9;flex:none}.input-wrap input{border:0;outline:0;min-width:0;flex:1;padding:12px 0;font-size:14px;color:var(--ink)}.input-wrap input::placeholder{color:#a3adbc}
-    .primary{border:0;background:var(--blue);color:#fff;border-radius:11px;padding:13px 18px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;transition:.2s}.primary:hover{background:var(--blue2);transform:translateY(-1px)}.primary:disabled{opacity:.6;cursor:wait;transform:none}
-    .hint{font-size:11px;color:#8792a4;margin:12px 2px 0;line-height:1.55}.platforms{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:22px 0 0}.pill{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:99px;font-size:11px;font-weight:700;color:#596579}.dot{width:7px;height:7px;border-radius:50%;background:#2563eb}
-    #result{display:none;margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:17px;background:#fbfcff}.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.result-title{font-weight:800;font-size:14px}.status{font-size:10px;color:#16794b;background:#eaf8f0;border-radius:99px;padding:6px 9px;font-weight:800}.preview{margin-top:14px;aspect-ratio:16/9;width:100%;border:0;border-radius:12px;background:#eef2f8}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid #dce4ef;background:#fff;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:800;color:#344054;cursor:pointer}.secondary:hover{border-color:#b6caff;color:var(--blue)}.notice{font-size:12px;line-height:1.6;color:#667085;background:#f1f5fb;border-radius:10px;padding:12px;margin-top:12px}
-    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:760px;margin:25px auto 0}.feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.feature-icon{width:34px;height:34px;display:grid;place-items:center;background:#eff5ff;color:var(--blue);border-radius:10px;margin-bottom:12px}.feature-icon svg{width:18px}.feature b{font-size:12px}.feature p{font-size:11px;color:var(--muted);line-height:1.55;margin:7px 0 0}
-    .below{max-width:760px;margin:34px auto 0;display:flex;align-items:center;justify-content:space-between;gap:14px}.below h2{font-size:17px;margin:0}.below p{font-size:11px;color:var(--muted);margin:6px 0 0}.history{display:none;max-width:760px;margin:15px auto 0;background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px}.history-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:11px}.history-row:last-child{border:0}.history-row a{color:var(--blue);max-width:78%;overflow-wrap:anywhere}
-    footer{border-top:1px solid var(--line);background:#fff;text-align:center;padding:23px;color:#8792a4;font-size:11px}.modal{position:fixed;inset:0;background:#14213a70;display:none;place-items:center;padding:20px;z-index:5}.modal-box{background:#fff;width:min(400px,100%);border-radius:18px;padding:23px;box-shadow:var(--shadow)}.modal-box h3{margin:0 0 7px}.modal-box p{font-size:12px;color:var(--muted);line-height:1.5}.modal-box input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin:6px 0;outline-color:#8eb2ff}.modal-actions{display:flex;gap:8px;margin-top:10px}.modal-actions>*{flex:1}.small-link{border:0;background:transparent;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;margin-top:12px}.msg{font-size:11px;color:#b42318;min-height:16px;margin-top:7px}
-    @media(max-width:650px){.top{height:66px}.nav a{display:none}main{padding-top:45px}h1{letter-spacing:-2px}.panel{padding:15px;border-radius:17px}.input-wrap{flex-wrap:wrap}.input-wrap input{min-width:calc(100% - 35px)}.input-wrap .primary{width:100%}.features{grid-template-columns:1fr}.feature{display:flex;gap:12px;align-items:flex-start}.feature-icon{flex:none;margin:0}.below{align-items:flex-start;flex-direction:column}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="LinkToVid – Video-Links erkennen, Vorschau ansehen und direkte Videodateien speichern.">
+<title>LinkToVid – Deine Links. Deine Videos.</title>
+<style>
+:root{--blue:#2563eb;--blue2:#1d4ed8;--ink:#172033;--muted:#687386;--line:#e8edf5;--bg:#f7f9fc;--card:#fff;--shadow:0 18px 55px rgba(26,46,85,.08)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+button,input{font:inherit}a{color:inherit}:focus-visible{outline:3px solid #8eb2ff;outline-offset:2px}
+.top{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100% - 1120px)/2))}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-size:21px;font-weight:800;letter-spacing:-.8px}
+.logo{width:37px;height:37px;border-radius:12px;background:linear-gradient(145deg,#4386ff,#1d4ed8);display:grid;place-items:center;color:#fff;box-shadow:0 7px 16px #2563eb35}.logo svg{width:21px}
+.nav{display:flex;align-items:center;gap:18px}.nav a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:600}.nav a:hover{color:var(--blue)}
+.auth{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer}.auth:hover{border-color:#b8ccff;color:var(--blue)}
+main{max-width:940px;margin:0 auto;padding:65px 22px 70px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #dce8ff;background:#eff5ff;color:var(--blue);padding:8px 12px;border-radius:99px;font-size:12px;font-weight:700}
+h1{font-size:clamp(38px,6vw,62px);letter-spacing:-3.2px;line-height:1.04;margin:22px 0 15px;text-align:center}.gradient{color:var(--blue)}
+.lead{max-width:570px;margin:0 auto;color:var(--muted);line-height:1.7;text-align:center;font-size:15px}
+.panel{max-width:760px;margin:34px auto 0;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}
+.field-label{display:block;font-size:13px;font-weight:700;margin:0 0 10px 2px}
+.input-wrap{display:flex;align-items:center;gap:10px;border:1px solid #dfe6f0;border-radius:14px;padding:6px 7px 6px 14px;background:#fff;transition:.2s}
+.input-wrap:focus-within{border-color:#8eb2ff;box-shadow:0 0 0 4px #2563eb12}.input-wrap svg{width:19px;color:#8a96a9;flex:none}
+.input-wrap input{border:0;outline:0;min-width:0;flex:1;padding:12px 0;font-size:14px;color:var(--ink)}.input-wrap input::placeholder{color:#a3adbc}
+.primary{border:0;background:var(--blue);color:#fff;border-radius:11px;padding:13px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.2s}
+.primary:hover{background:var(--blue2)}.primary:disabled{opacity:.6;cursor:wait}
+.hint{font-size:12px;color:#8792a4;margin:12px 2px 0;line-height:1.55}
+.platforms{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin:22px 0 0}
+.pill{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:99px;font-size:12px;font-weight:600;color:#596579}.dot{width:7px;height:7px;border-radius:50%;background:#2563eb}
+#result{display:none;margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:17px;background:#fbfcff}
+.result-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.result-title{font-weight:800;font-size:14px}
+.status{font-size:11px;color:#16794b;background:#eaf8f0;border-radius:99px;padding:6px 9px;font-weight:700}
+.preview{margin-top:14px;aspect-ratio:16/9;width:100%;border:0;border-radius:12px;background:#eef2f8;display:block}video.preview{object-fit:contain;background:#0d1626}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.secondary{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid #dce4ef;background:#fff;border-radius:10px;padding:11px 14px;font-size:12px;font-weight:700;color:#344054;cursor:pointer}.secondary:hover{border-color:#b6caff;color:var(--blue)}
+.notice{font-size:12px;line-height:1.6;color:#667085;background:#f1f5fb;border-radius:10px;padding:12px;margin-top:12px}
+.progress{height:10px;border-radius:99px;background:#e3ebf8;overflow:hidden;margin-top:14px}.bar{height:100%;width:0;background:var(--blue);transition:width .15s linear}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:760px;margin:25px auto 0}
+.feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}
+.feature-icon{width:34px;height:34px;display:grid;place-items:center;background:#eff5ff;color:var(--blue);border-radius:10px;margin-bottom:12px}
+.feature b{font-size:13px}.feature p{font-size:12px;color:var(--muted);line-height:1.55;margin:7px 0 0}
+.below{max-width:760px;margin:34px auto 0;display:flex;align-items:center;justify-content:space-between;gap:14px}.below h2{font-size:17px;margin:0}.below p{font-size:12px;color:var(--muted);margin:6px 0 0}
+.history{display:none;max-width:760px;margin:15px auto 0;background:#fff;border:1px solid var(--line);border-radius:15px;padding:15px;font-size:12px;color:var(--muted)}
+.history-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink)}.history-row:last-child{border:0}
+.history-row a{color:var(--blue);flex:1;min-width:0;overflow-wrap:anywhere}.del{border:0;background:transparent;color:#b42318;font-size:12px;font-weight:700;cursor:pointer}
+footer{border-top:1px solid var(--line);background:#fff;text-align:center;padding:23px;color:#8792a4;font-size:12px}
+.modal{position:fixed;inset:0;background:#14213a70;display:none;place-items:center;padding:20px;z-index:5}
+.modal-box{background:#fff;width:min(400px,100%);border-radius:18px;padding:23px;box-shadow:var(--shadow)}.modal-box h3{margin:0 0 7px}.modal-box p{font-size:13px;color:var(--muted);line-height:1.5}
+.modal-box input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;margin:6px 0}
+.modal-actions{display:flex;gap:8px;margin-top:10px}.modal-actions>*{flex:1}
+.small-link{border:0;background:transparent;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;margin-top:12px}.msg{font-size:12px;color:#b42318;min-height:16px;margin-top:7px}
+@media(max-width:650px){.top{height:66px}.nav a{display:none}main{padding-top:45px}h1{letter-spacing:-2px}.panel{padding:15px;border-radius:17px}.input-wrap{flex-wrap:wrap}.input-wrap input{min-width:calc(100% - 35px)}.input-wrap .primary{width:100%}.features{grid-template-columns:1fr}.feature{display:flex;gap:12px;align-items:flex-start}.feature-icon{flex:none;margin:0}.below{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="./"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></span>LinkToVid</a>
-  <nav class="nav"><a href="#how">How it works</a><a href="#history">History</a><button class="auth" id="authBtn">Sign in</button></nav>
+<a class="brand" href="./"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg></span>LinkToVid</a>
+<nav class="nav"><a href="#how">So funktioniert’s</a><a href="#history">Verlauf</a><button class="auth" id="authBtn">Anmelden</button></nav>
 </header>
 <main>
-  <div style="text-align:center"><span class="eyebrow"><span class="dot"></span> SIMPLE VIDEO LINK TOOL</span>
-    <h1>Your links.<br><span class="gradient">Your videos.</span></h1>
-    <p class="lead">Paste a video link to identify its platform, preview supported videos or save a direct video file.</p>
-  </div>
-  <section class="panel" aria-label="Video link analyzer">
-    <label class="field-label" for="videoUrl">Paste your video link</label>
-    <div class="input-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      <input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="url">
-      <button class="primary" id="analyzeBtn">Analyze link →</button>
-    </div>
-    <p class="hint">Direct video files only · Maximum duration: 40 minutes · Up to 500 MB · Only download videos you are allowed to save.</p>
-    <div id="result" aria-live="polite"></div>
-  </section>
-  <div class="platforms"><span class="pill"><span class="dot"></span>YouTube preview</span><span class="pill"><span class="dot"></span>TikTok</span><span class="pill"><span class="dot"></span>Instagram</span><span class="pill"><span class="dot"></span>Facebook</span><span class="pill"><span class="dot"></span>Direct MP4</span></div>
-  <section class="features" id="how">
-    <article class="feature"><span class="feature-icon">↗</span><div><b>Smart link detection</b><p>Recognizes common video platforms and direct video-file URLs.</p></div></article>
-    <article class="feature"><span class="feature-icon">▶</span><div><b>Video preview</b><p>Preview supported public videos using the platform's own player.</p></div></article>
-    <article class="feature"><span class="feature-icon">↓</span><div><b>Direct file saving</b><p>Save direct MP4/WebM links when the source allows browser access.</p></div></article>
-  </section>
-  <section class="below" id="history"><div><h2>Your recent links</h2><p>Sign in to keep your link history on this device and across sessions.</p></div><button class="secondary" id="historyBtn">Load history</button></section>
-  <section class="history" id="historyList"></section>
+<div style="text-align:center"><span class="eyebrow"><span class="dot"></span>Einfaches Video-Link-Tool</span>
+<h1>Deine Links.<br><span class="gradient">Deine Videos.</span></h1>
+<p class="lead">Füge einen Video-Link ein, erkenne die Plattform, sieh dir die Vorschau an oder speichere eine direkte Videodatei.</p></div>
+<section class="panel" aria-label="Video-Link analysieren">
+<label class="field-label" for="videoUrl">Video-Link einfügen</label>
+<div class="input-wrap">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+<input id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=…" autocomplete="url">
+<button class="primary" id="analyzeBtn">Video analysieren</button>
+</div>
+<p class="hint">Herunterladen kannst du direkte Videodateien (MP4, WebM) bis 40 Minuten und 500 MB. Lade nur Videos herunter, die du speichern darfst.</p>
+<div id="result" aria-live="polite"></div>
+</section>
+<div class="platforms"><span class="pill"><span class="dot"></span>YouTube-Vorschau</span><span class="pill"><span class="dot"></span>TikTok</span><span class="pill"><span class="dot"></span>Instagram</span><span class="pill"><span class="dot"></span>Facebook</span><span class="pill"><span class="dot"></span>Direkte MP4/WebM</span></div>
+<section class="features" id="how">
+<article class="feature"><span class="feature-icon">↗</span><div><b>Link-Erkennung</b><p>Erkennt gängige Videoplattformen und direkte Video-Dateien.</p></div></article>
+<article class="feature"><span class="feature-icon">▶</span><div><b>Vorschau</b><p>Zeigt YouTube-Videos im offiziellen Player und direkte Dateien im Browser.</p></div></article>
+<article class="feature"><span class="feature-icon">↓</span><div><b>Download mit Fortschritt</b><p>Prüft Länge und Größe und speichert direkte Dateien, wenn der Server es erlaubt.</p></div></article>
+</section>
+<section class="below" id="history"><div><h2>Deine letzten Links</h2><p>Melde dich an, um deinen Link-Verlauf zu speichern.</p></div><button class="secondary" id="historyBtn">Verlauf laden</button></section>
+<section class="history" id="historyList"></section>
 </main>
-<footer>© <span id="year"></span> LinkToVid · Built for simple, authorized video access.</footer>
+<footer>© <span id="year"></span> LinkToVid · Für einfachen, erlaubten Videozugriff.</footer>
 <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-  <div class="modal-box"><h3 id="authTitle">Welcome to LinkToVid</h3><p id="authDescription">Sign in or create an account to save your link history.</p>
-    <input id="email" type="email" placeholder="Email address" autocomplete="email">
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-    <div class="modal-actions"><button class="secondary" id="closeModal">Cancel</button><button class="primary" id="submitAuth">Sign in</button></div>
-    <button class="small-link" id="toggleAuth">New here? Create an account</button><div class="msg" id="authMessage"></div>
-  </div>
+<div class="modal-box"><h3 id="authTitle">Willkommen bei LinkToVid</h3><p>Melde dich an oder erstelle ein Konto, um deinen Link-Verlauf zu speichern. Für normale Downloads brauchst du kein Konto.</p>
+<input id="email" type="email" placeholder="E-Mail-Adresse" autocomplete="email">
+<input id="password" type="password" placeholder="Passwort" autocomplete="current-password">
+<div class="modal-actions"><button class="secondary" id="closeModal">Abbrechen</button><button class="primary" id="submitAuth">Anmelden</button></div>
+<button class="small-link" id="toggleAuth">Neu hier? Konto erstellen</button><div class="msg" id="authMessage"></div></div>
 </div>
 <script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm';
-  const SUPABASE_URL = 'https://nhfabpzmvmgtsdntwstq.supabase.co';
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_VTuKf5UBy5LOm9RyweLK-A_zri_CwDG';
-  const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-  const $ = (id) => document.getElementById(id);
-  let currentUser = null, signUpMode = false, latestUrl = '', latestPlatform = 'other';
-  $('year').textContent = new Date().getFullYear();
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm';
+const SUPABASE_URL = 'https://nhfabpzmvmgtsdntwstq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_VTuKf5UBy5LOm9RyweLK-A_zri_CwDG';
+const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = (id) => document.getElementById(id);
+const MAX_SECONDS = 40 * 60, MAX_STREAM = 500 * 1024 * 1024, MAX_MEMORY = 300 * 1024 * 1024;
+const VIDEO_EXT = /\.(mp4|webm|m4v|mov|ogv)$/i;
+let currentUser = null, signUpMode = false, latestUrl = '', latestPlatform = 'other', abortCtl = null;
+$('year').textContent = new Date().getFullYear();
 
-  function parsePlatform(raw) {
-    let u; try { u = new URL(raw); } catch { return { error: 'Please enter a valid URL starting with https:// or http://.' }; }
-    if (!['https:','http:'].includes(u.protocol) || u.username || u.password) return { error: 'This link format is not supported.' };
-    const host = u.hostname.toLowerCase().replace(/^www\./,'');
-    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtu.be' || host === 'youtube-nocookie.com') {
-      let id = host === 'youtu.be' ? u.pathname.split('/').filter(Boolean)[0] : (u.searchParams.get('v') || u.pathname.match(/\/(?:shorts|embed|live)\/([^/?]+)/)?.[1]);
-      if (!id || !/^[\w-]{6,20}$/.test(id)) return { error: 'Could not recognize this YouTube video link.' };
-      return { platform:'youtube', label:'YouTube', embed:'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id), open:'https://www.youtube.com/watch?v='+encodeURIComponent(id) };
-    }
-    if (/(^|\.)tiktok\.com$/.test(host)) return { platform:'tiktok',label:'TikTok',open:u.href };
-    if (/(^|\.)instagram\.com$/.test(host)) return { platform:'instagram',label:'Instagram',open:u.href };
-    if (/(^|\.)facebook\.com$/.test(host) || host === 'fb.watch') return { platform:'facebook',label:'Facebook',open:u.href };
-    if (/\.(mp4|webm|m4v|mov|ogv)$/i.test(u.pathname)) return { platform:'direct',label:'Direct video file',direct:true,open:u.href };
-    return { platform:'other',label:'Website link',open:u.href };
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const link = (cls, href, text) => { const a = el('a', cls, text); if (/^https?:\/\//i.test(href)) a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; };
+const mb = (n) => (n / 1048576).toFixed(n >= 10485760 ? 0 : 1);
+const fmt = (s) => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0');
+
+function parsePlatform(raw) {
+  let u; try { u = new URL(raw); } catch { return { error: 'Bitte gib einen gültigen Link ein, der mit https:// oder http:// beginnt.' }; }
+  if (!['https:', 'http:'].includes(u.protocol) || u.username || u.password) return { error: 'Dieses Link-Format wird nicht unterstützt.' };
+  const host = u.hostname.toLowerCase().replace(/^www\./, '');
+  if (['youtube.com', 'm.youtube.com', 'youtu.be', 'youtube-nocookie.com'].includes(host)) {
+    const id = host === 'youtu.be' ? u.pathname.split('/').filter(Boolean)[0] : (u.searchParams.get('v') || u.pathname.match(/\/(?:shorts|embed|live)\/([^/?]+)/)?.[1]);
+    if (!id || !/^[\w-]{6,20}$/.test(id)) return { error: 'Dieser YouTube-Link konnte nicht erkannt werden.' };
+    return { platform: 'youtube', label: 'YouTube', embed: 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id), open: 'https://www.youtube.com/watch?v=' + encodeURIComponent(id) };
   }
+  if (/(^|\.)tiktok\.com$/.test(host)) return { platform: 'tiktok', label: 'TikTok', open: u.href };
+  if (/(^|\.)instagram\.com$/.test(host)) return { platform: 'instagram', label: 'Instagram', open: u.href };
+  if (/(^|\.)facebook\.com$/.test(host) || host === 'fb.watch') return { platform: 'facebook', label: 'Facebook', open: u.href };
+  if (VIDEO_EXT.test(u.pathname)) return { platform: 'direct', label: 'Direkte Videodatei', direct: true, open: u.href };
+  return { platform: 'other', label: 'Website-Link', open: u.href };
+}
 
-  async function saveHistory(url, platform) {
-    if (!currentUser) return;
-    const { error } = await supabase.from('linktovid_history').insert({ user_id: currentUser.id, source_url: url, platform });
-    if (error) console.warn('History could not be saved:', error.message);
-  }
+async function saveHistory(url, platform) {
+  if (!currentUser) return;
+  const { data } = await supabase.from('linktovid_history').select('id').eq('source_url', url).limit(1);
+  if (data?.length) return;
+  const { error } = await supabase.from('linktovid_history').insert({ user_id: currentUser.id, source_url: url, platform });
+  if (error) console.warn('Verlauf konnte nicht gespeichert werden:', error.message);
+}
 
-  function readVideoDuration(blob) {
-    return new Promise((resolve, reject) => {
-      const objectUrl = URL.createObjectURL(blob);
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      const cleanup = () => {
-        video.removeAttribute('src');
-        video.load();
-        URL.revokeObjectURL(objectUrl);
-      };
-      video.onloadedmetadata = () => {
-        const duration = video.duration;
-        cleanup();
-        if (!Number.isFinite(duration) || duration <= 0) reject(new Error('Could not verify this video’s duration. Please use a standard MP4 or WebM file.'));
-        else resolve(duration);
-      };
-      video.onerror = () => {
-        cleanup();
-        reject(new Error('Could not read this video’s duration. Please use a standard MP4 or WebM file.'));
-      };
-      video.src = objectUrl;
-    });
-  }
-
-  async function downloadDirectVideo(info, button, message) {
-    button.disabled = true;
-    button.textContent = 'Checking video…';
-    message.textContent = '';
-    try {
-      // Direct files only: no platform extraction, proxy, or restriction bypass.
-      const response = await fetch(info.open, { method: 'GET', mode: 'cors', credentials: 'omit' });
-      if (!response.ok) throw new Error('The video server returned HTTP ' + response.status + '.');
-      const type = (response.headers.get('content-type') || '').toLowerCase();
-      const length = Number(response.headers.get('content-length') || 0);
-      if (length > 500 * 1024 * 1024) throw new Error('This file is larger than the 500 MB browser-download limit.');
-      if (type && !(type.startsWith('video/') || type.includes('octet-stream'))) {
-        throw new Error('The link did not return a recognized video file.');
-      }
-      const blob = await response.blob();
-      if (!blob.size) throw new Error('The video file is empty.');
-      if (blob.size > 500 * 1024 * 1024) throw new Error('This file is larger than the 500 MB browser-download limit.');
-      button.textContent = 'Checking duration…';
-      const duration = await readVideoDuration(blob);
-      if (duration > 40 * 60) throw new Error('This video is longer than the 40-minute limit and cannot be downloaded with LinkToVid.');
-      const minutes = Math.floor(duration / 60);
-      const seconds = Math.floor(duration % 60);
-      const path = new URL(info.open).pathname.split('/').filter(Boolean).pop() || 'video';
-      const filename = decodeURIComponent(path).replace(/[^a-z0-9._-]/gi, '_').slice(0, 100) || 'video';
-      const objectUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = objectUrl;
-      link.download = /\.(mp4|webm|m4v|mov|ogv)$/i.test(filename) ? filename : filename + '.mp4';
-      document.body.append(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
-      button.textContent = 'Download again ↓';
-      message.textContent = 'Duration verified: ' + minutes + ':' + String(seconds).padStart(2, '0') + '. Download started.';
-    } catch (error) {
-      message.textContent = error.name === 'TypeError'
-        ? 'Download blocked by the video server or browser (often CORS). Try opening the original file and use its own download option.'
-        : (error.message || 'Download failed. Open the original link and use its download option.');
-      button.textContent = 'Try download again ↓';
-    } finally {
-      button.disabled = false;
-    }
-  }
-
-  function showResult(info, url) {
-    const box = $('result'); box.style.display = 'block';
-    if (info.error) { box.innerHTML = '<div class="result-title">Link not recognized</div><div class="notice"></div>'; box.querySelector('.notice').textContent = info.error; return; }
-    const title = document.createElement('div'); title.className='result-head';
-    const name=document.createElement('div');name.className='result-title';name.textContent=info.label;
-    const status=document.createElement('span');status.className='status';status.textContent='LINK RECOGNIZED';title.append(name,status);box.replaceChildren(title);
-    if (info.embed) {
-      const frame=document.createElement('iframe');frame.className='preview';frame.src=info.embed;frame.title='YouTube video preview';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';frame.allowFullscreen=true;box.append(frame);
-      const note=document.createElement('div');note.className='notice';note.textContent='YouTube videos can be previewed here. This tool does not extract or bypass YouTube download restrictions. Use YouTube’s own offline/download feature where it is available.';box.append(note);
-    } else if (info.direct) {
-      const note=document.createElement('div');note.className='notice';note.textContent='This appears to be a direct video file. Saving depends on the source server allowing browser access (CORS). Only download files you own or have permission to save.';box.append(note);
-    } else {
-      const note=document.createElement('div');note.className='notice';note.textContent='This platform link is recognized. Open it on the original platform to use its built-in sharing or download options. LinkToVid does not remove platform restrictions.';box.append(note);
-    }
-    const actions=document.createElement('div');actions.className='actions';
-    if(info.direct){
-      const d=document.createElement('button');d.type='button';d.className='primary';d.textContent='Download video ↓';
-      const downloadMessage=document.createElement('div');downloadMessage.className='notice';downloadMessage.setAttribute('aria-live','polite');
-      d.addEventListener('click',()=>downloadDirectVideo(info,d,downloadMessage));
-      actions.append(d);
-      const openFile=document.createElement('a');openFile.className='secondary';openFile.href=info.open;openFile.target='_blank';openFile.rel='noopener noreferrer';openFile.textContent='Open video file ↗';actions.append(openFile);
-      box.append(downloadMessage);
-    }
-    const open=document.createElement('a');open.className='secondary';open.href=info.open;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Open original link ↗';actions.append(open);box.append(actions);
-  }
-
-  $('analyzeBtn').addEventListener('click', async()=>{
-    const raw=$('videoUrl').value.trim(); if(!raw){$('videoUrl').focus();return;}
-    const btn=$('analyzeBtn');btn.disabled=true;btn.textContent='Checking…';
-    const info=parsePlatform(raw);latestUrl=raw;latestPlatform=info.platform||'other';showResult(info,raw);
-    if(!info.error) await saveHistory(raw,latestPlatform);
-    btn.disabled=false;btn.textContent='Analyze link →';
+function readDuration(url) {
+  return new Promise((resolve, reject) => {
+    const v = document.createElement('video'); v.preload = 'metadata'; v.muted = true;
+    const done = (fn, val) => { clearTimeout(t); v.removeAttribute('src'); v.load(); fn(val); };
+    const t = setTimeout(() => done(reject, new Error('Die Videodauer konnte nicht rechtzeitig gelesen werden.')), 15000);
+    v.onloadedmetadata = () => Number.isFinite(v.duration) && v.duration > 0 ? done(resolve, v.duration) : done(reject, new Error('Die Videodauer konnte nicht ermittelt werden. Nutze eine normale MP4- oder WebM-Datei.'));
+    v.onerror = () => done(reject, new Error('Das Video konnte nicht gelesen werden. Prüfe den Link und das Dateiformat.'));
+    v.src = url;
   });
-  $('videoUrl').addEventListener('keydown',e=>{if(e.key==='Enter')$('analyzeBtn').click();});
+}
 
-  async function refreshUser(){
-    const {data}=await supabase.auth.getSession();currentUser=data.session?.user||null;
-    $('authBtn').textContent=currentUser?'Sign out':'Sign in';
+function fileName(url) {
+  let p = new URL(url).pathname.split('/').filter(Boolean).pop() || 'video';
+  try { p = decodeURIComponent(p); } catch {}
+  const n = p.replace(/[^a-z0-9._-]/gi, '_').slice(0, 100) || 'video';
+  return VIDEO_EXT.test(n) ? n : n + '.mp4';
+}
+
+function saveBlob(blob, name) {
+  const href = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = href; a.download = name; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 60000);
+}
+
+async function downloadDirect(info, ui) {
+  const { dl, cancel, prog, bar, text } = ui;
+  const say = (m) => { text.hidden = !m; text.textContent = m || ''; };
+  dl.disabled = true; cancel.hidden = false; prog.hidden = true; bar.style.width = '0%'; say('Videodauer wird geprüft …');
+  abortCtl = new AbortController();
+  let writable = null;
+  try {
+    const dur = await readDuration(info.open);
+    if (dur > MAX_SECONDS) throw new Error('Dieses Video ist länger als 40 Minuten und kann mit LinkToVid nicht heruntergeladen werden.');
+    const name = fileName(info.open);
+    if (window.showSaveFilePicker) {
+      try { writable = await (await window.showSaveFilePicker({ suggestedName: name })).createWritable(); }
+      catch (e) { if (e.name === 'AbortError') { say('Speichern abgebrochen.'); return; } writable = null; }
+    }
+    const limit = writable ? MAX_STREAM : MAX_MEMORY;
+    const tooBig = () => new Error('Die Datei ist größer als das Limit von ' + mb(limit) + ' MB' + (writable ? '' : ' für diesen Browser') + '.');
+    const res = await fetch(info.open, { mode: 'cors', credentials: 'omit', signal: abortCtl.signal });
+    if (!res.ok) throw new Error('Der Server hat mit HTTP ' + res.status + ' geantwortet.');
+    const type = (res.headers.get('content-type') || '').toLowerCase();
+    if (type && !(type.startsWith('video/') || type.includes('octet-stream'))) throw new Error('Der Link liefert keine erkannte Videodatei.');
+    const total = Number(res.headers.get('content-length') || 0);
+    if (total > limit) throw tooBig();
+    if (!res.body) throw new Error('Dieser Browser unterstützt den Datenstrom nicht.');
+    prog.hidden = false;
+    const reader = res.body.getReader(), chunks = []; let got = 0;
+    for (;;) {
+      const { done, value } = await reader.read(); if (done) break;
+      got += value.length;
+      if (got > limit) { await reader.cancel(); throw tooBig(); }
+      if (writable) await writable.write(value); else chunks.push(value);
+      bar.style.width = total ? Math.min(100, got / total * 100) + '%' : '100%';
+      say(mb(got) + ' MB' + (total ? ' von ' + mb(total) + ' MB (' + Math.round(got / total * 100) + ' %)' : '') + ' heruntergeladen');
+    }
+    if (!got) throw new Error('Die Videodatei ist leer.');
+    if (writable) { await writable.close(); writable = null; }
+    else saveBlob(new Blob(chunks, { type: type.startsWith('video/') ? type : 'video/mp4' }), name);
+    bar.style.width = '100%'; dl.textContent = 'Erneut herunterladen ↓';
+    say('Fertig: ' + mb(got) + ' MB, Dauer ' + fmt(dur) + '. Der Download wurde gestartet.');
+  } catch (e) {
+    if (writable) { try { await writable.abort(); } catch {} }
+    say(e.name === 'AbortError' ? 'Download abgebrochen.'
+      : e.name === 'TypeError' ? 'Der Server oder dein Browser blockiert den Download (meist CORS). Öffne die Originaldatei und nutze deren eigene Download-Funktion.'
+      : (e.message || 'Der Download ist fehlgeschlagen.'));
+  } finally { dl.disabled = false; cancel.hidden = true; abortCtl = null; }
+}
+
+function showResult(info) {
+  const box = $('result'); box.style.display = 'block'; box.replaceChildren();
+  if (info.error) { box.append(el('div', 'result-title', 'Link nicht erkannt'), el('div', 'notice', info.error)); return; }
+  const head = el('div', 'result-head'); head.append(el('div', 'result-title', info.label), el('span', 'status', 'Link erkannt')); box.append(head);
+  const actions = el('div', 'actions');
+  if (info.embed) {
+    const f = el('iframe', 'preview'); f.src = info.embed; f.title = 'YouTube-Vorschau'; f.allowFullscreen = true;
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    box.append(f, el('div', 'notice', 'Du kannst das Video hier ansehen. LinkToVid speichert YouTube-Videos nicht als Datei und umgeht keine YouTube-Beschränkungen. Nutze die Offline-Funktion von YouTube oder, für eigene Videos, YouTube Studio.'));
+  } else if (info.direct) {
+    const v = el('video', 'preview'); v.controls = true; v.preload = 'metadata'; v.src = info.open;
+    box.append(v, el('div', 'notice', 'Das Speichern klappt nur, wenn der Server den Zugriff im Browser erlaubt (CORS). Lade nur Dateien herunter, die dir gehören oder die du speichern darfst.'));
+    const dl = el('button', 'primary', 'Video herunterladen ↓'); dl.type = 'button';
+    const cancel = el('button', 'secondary', 'Abbrechen'); cancel.type = 'button'; cancel.hidden = true;
+    const prog = el('div', 'progress'); prog.hidden = true; const bar = el('div', 'bar'); prog.append(bar);
+    const text = el('div', 'notice'); text.hidden = true; text.setAttribute('aria-live', 'polite');
+    dl.addEventListener('click', () => downloadDirect(info, { dl, cancel, prog, bar, text }));
+    cancel.addEventListener('click', () => abortCtl?.abort());
+    actions.append(dl, cancel, link('secondary', info.open, 'Datei öffnen ↗'));
+    box.append(actions, prog, text); return;
+  } else {
+    box.append(el('div', 'notice', 'Dieser Plattform-Link wird erkannt, aber nicht heruntergeladen. Öffne ihn auf der Plattform und nutze deren Teilen- oder Download-Funktion.'));
   }
-  await refreshUser();
-  supabase.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;$('authBtn').textContent=currentUser?'Sign out':'Sign in';});
-  $('authBtn').addEventListener('click',async()=>{
-    if(currentUser){await supabase.auth.signOut();await refreshUser();$('historyList').style.display='none';return;}
-    $('authModal').style.display='grid';$('authMessage').textContent='';
+  actions.append(link('secondary', info.open, 'Originallink öffnen ↗')); box.append(actions);
+}
+
+async function loadHistory() {
+  const list = $('historyList'); list.style.display = 'block'; list.replaceChildren();
+  if (!currentUser) { list.textContent = 'Melde dich an, um deine gespeicherten Links zu sehen.'; return; }
+  const { data, error } = await supabase.from('linktovid_history').select('id,source_url,platform').order('created_at', { ascending: false }).limit(12);
+  if (error) { list.textContent = 'Der Verlauf konnte nicht geladen werden. Bitte versuche es später erneut.'; return; }
+  if (!data?.length) { list.textContent = 'Noch keine Links gespeichert. Analysiere einen Link, um ihn hier zu sehen.'; return; }
+  data.forEach((row) => {
+    const item = el('div', 'history-row'), del = el('button', 'del', 'Löschen'); del.type = 'button';
+    del.setAttribute('aria-label', 'Eintrag löschen');
+    del.addEventListener('click', async () => { const { error } = await supabase.from('linktovid_history').delete().eq('id', row.id); if (!error) item.remove(); });
+    item.append(link('', row.source_url, row.source_url), el('span', '', row.platform), del); list.append(item);
   });
-  $('closeModal').addEventListener('click',()=>$('authModal').style.display='none');
-  $('toggleAuth').addEventListener('click',()=>{signUpMode=!signUpMode;$('submitAuth').textContent=signUpMode?'Create account':'Sign in';$('toggleAuth').textContent=signUpMode?'Already have an account? Sign in':'New here? Create an account';$('authTitle').textContent=signUpMode?'Create your account':'Welcome to LinkToVid';$('authMessage').textContent='';});
-  $('submitAuth').addEventListener('click',async()=>{
-    const email=$('email').value.trim(),password=$('password').value;
-    $('authMessage').textContent='';
-    if(!email||password.length<8){$('authMessage').textContent='Enter an email and a password with at least 8 characters.';return;}
-    const action=signUpMode?supabase.auth.signUp({email,password}):supabase.auth.signInWithPassword({email,password});
-    const {data,error}=await action;
-    if(error){$('authMessage').textContent=error.message;return;}
-    if(signUpMode&&!data.session){$('authMessage').textContent='Check your email to confirm your account, then sign in.';return;}
-    currentUser=data.user||data.session?.user||null;$('authModal').style.display='none';await refreshUser();
-    if(latestUrl)await saveHistory(latestUrl,latestPlatform);
-  });
-  $('historyBtn').addEventListener('click',async()=>{
-    const list=$('historyList');list.style.display='block';list.replaceChildren();
-    if(!currentUser){list.textContent='Please sign in to view your saved links.';return;}
-    const {data,error}=await supabase.from('linktovid_history').select('source_url,platform,created_at').order('created_at',{ascending:false}).limit(12);
-    if(error){list.textContent='History could not be loaded. Please try again later.';return;}
-    if(!data?.length){list.textContent='No saved links yet. Analyze a link to add it here.';return;}
-    data.forEach(row=>{const item=document.createElement('div');item.className='history-row';const a=document.createElement('a');a.href=row.source_url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=row.source_url;const tag=document.createElement('span');tag.textContent=row.platform;item.append(a,tag);list.append(item);});
-  });
+}
+
+$('analyzeBtn').addEventListener('click', async () => {
+  const raw = $('videoUrl').value.trim(); if (!raw) { $('videoUrl').focus(); return; }
+  const btn = $('analyzeBtn'); btn.disabled = true; btn.textContent = 'Wird geprüft …';
+  const info = parsePlatform(raw); latestUrl = raw; latestPlatform = info.platform || 'other'; showResult(info);
+  if (!info.error) { await saveHistory(raw, latestPlatform); if ($('historyList').style.display === 'block') await loadHistory(); }
+  btn.disabled = false; btn.textContent = 'Video analysieren';
+});
+$('videoUrl').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('analyzeBtn').click(); });
+
+function renderAuth() { $('authBtn').textContent = currentUser ? 'Abmelden' : 'Anmelden'; }
+async function refreshUser() { const { data } = await supabase.auth.getSession(); currentUser = data.session?.user || null; renderAuth(); }
+await refreshUser();
+supabase.auth.onAuthStateChange((_e, session) => { currentUser = session?.user || null; renderAuth(); });
+const openModal = () => { $('authModal').style.display = 'grid'; $('authMessage').textContent = ''; $('email').focus(); };
+const closeModal = () => { $('authModal').style.display = 'none'; };
+$('authBtn').addEventListener('click', async () => {
+  if (currentUser) { await supabase.auth.signOut(); await refreshUser(); $('historyList').style.display = 'none'; return; }
+  openModal();
+});
+$('closeModal').addEventListener('click', closeModal);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+$('toggleAuth').addEventListener('click', () => {
+  signUpMode = !signUpMode;
+  $('submitAuth').textContent = signUpMode ? 'Konto erstellen' : 'Anmelden';
+  $('toggleAuth').textContent = signUpMode ? 'Schon ein Konto? Anmelden' : 'Neu hier? Konto erstellen';
+  $('authTitle').textContent = signUpMode ? 'Konto erstellen' : 'Willkommen bei LinkToVid';
+  $('password').autocomplete = signUpMode ? 'new-password' : 'current-password'; $('authMessage').textContent = '';
+});
+$('password').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('submitAuth').click(); });
+$('submitAuth').addEventListener('click', async () => {
+  const email = $('email').value.trim(), password = $('password').value; $('authMessage').textContent = '';
+  if (!email || password.length < 8) { $('authMessage').textContent = 'Gib eine E-Mail-Adresse und ein Passwort mit mindestens 8 Zeichen ein.'; return; }
+  const { data, error } = await (signUpMode ? supabase.auth.signUp({ email, password }) : supabase.auth.signInWithPassword({ email, password }));
+  if (error) { $('authMessage').textContent = 'Das hat nicht geklappt: ' + error.message; return; }
+  if (signUpMode && !data.session) { $('authMessage').textContent = 'Bestätige deine E-Mail-Adresse und melde dich danach an.'; return; }
+  currentUser = data.user || data.session?.user || null; closeModal(); await refreshUser();
+  if (latestUrl) await saveHistory(latestUrl, latestPlatform);
+  if ($('historyList').style.display === 'block') await loadHistory();
+});
+$('historyBtn').addEventListener('click', loadHistory);
 </script>
 </body>
 </html>
