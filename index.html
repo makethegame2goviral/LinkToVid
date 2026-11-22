@@ -98,6 +98,45 @@
     if (error) console.warn('History could not be saved:', error.message);
   }
 
+  async function downloadDirectVideo(info, button, message) {
+    button.disabled = true;
+    button.textContent = 'Preparing download…';
+    message.textContent = '';
+    try {
+      // Direct files only: no platform extraction, proxy, or restriction bypass.
+      const response = await fetch(info.open, { method: 'GET', mode: 'cors', credentials: 'omit' });
+      if (!response.ok) throw new Error('The video server returned HTTP ' + response.status + '.');
+      const type = (response.headers.get('content-type') || '').toLowerCase();
+      const length = Number(response.headers.get('content-length') || 0);
+      if (length > 500 * 1024 * 1024) throw new Error('This file is larger than the 500 MB browser-download limit.');
+      if (type && !(type.startsWith('video/') || type.includes('octet-stream'))) {
+        throw new Error('The link did not return a recognized video file.');
+      }
+      const blob = await response.blob();
+      if (!blob.size) throw new Error('The video file is empty.');
+      if (blob.size > 500 * 1024 * 1024) throw new Error('This file is larger than the 500 MB browser-download limit.');
+      const path = new URL(info.open).pathname.split('/').filter(Boolean).pop() || 'video';
+      const filename = decodeURIComponent(path).replace(/[^a-z0-9._-]/gi, '_').slice(0, 100) || 'video';
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = /\.(mp4|webm|m4v|mov|ogv)$/i.test(filename) ? filename : filename + '.mp4';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
+      button.textContent = 'Download again ↓';
+      message.textContent = 'Download started. If it did not appear, check your browser downloads.';
+    } catch (error) {
+      message.textContent = error.name === 'TypeError'
+        ? 'Download blocked by the video server or browser (often CORS). Try opening the original file and use its own download option.'
+        : (error.message || 'Download failed. Open the original link and use its download option.');
+      button.textContent = 'Try download again ↓';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
   function showResult(info, url) {
     const box = $('result'); box.style.display = 'block';
     if (info.error) { box.innerHTML = '<div class="result-title">Link not recognized</div><div class="notice"></div>'; box.querySelector('.notice').textContent = info.error; return; }
@@ -113,7 +152,14 @@
       const note=document.createElement('div');note.className='notice';note.textContent='This platform link is recognized. Open it on the original platform to use its built-in sharing or download options. LinkToVid does not remove platform restrictions.';box.append(note);
     }
     const actions=document.createElement('div');actions.className='actions';
-    if(info.direct){const d=document.createElement('a');d.className='primary';d.href=info.open;d.target='_blank';d.rel='noopener noreferrer';d.textContent='Open video file ↗';actions.append(d);}
+    if(info.direct){
+      const d=document.createElement('button');d.type='button';d.className='primary';d.textContent='Download video ↓';
+      const downloadMessage=document.createElement('div');downloadMessage.className='notice';downloadMessage.setAttribute('aria-live','polite');
+      d.addEventListener('click',()=>downloadDirectVideo(info,d,downloadMessage));
+      actions.append(d);
+      const openFile=document.createElement('a');openFile.className='secondary';openFile.href=info.open;openFile.target='_blank';openFile.rel='noopener noreferrer';openFile.textContent='Open video file ↗';actions.append(openFile);
+      box.append(downloadMessage);
+    }
     const open=document.createElement('a');open.className='secondary';open.href=info.open;open.target='_blank';open.rel='noopener noreferrer';open.textContent='Open original link ↗';actions.append(open);box.append(actions);
   }
 
